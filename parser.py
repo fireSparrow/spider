@@ -29,8 +29,11 @@ class HtmlParser(BaseParser):
 
     def checkup(self, content):
         check = getattr(self, 'check', None)
-        if check:
-            return bool(content.select(check))
+        if check and content:
+            if content.select(check[0]):
+                return content.select(check[0]).text() == check[1]
+            else:
+                return False
         else:
             return bool(content)
 
@@ -45,5 +48,5 @@ class HtmlParser(BaseParser):
 
 
 if __name__ == '__main__':
-    parser = HtmlParser(url='kinozal.tv', proxy=True)
+    parser = HtmlParser(url='kinozal.tv', proxy=True, check=('*/title', 'Торрент трекер Кинозал.ТВ'))
     print(parser.parse())
