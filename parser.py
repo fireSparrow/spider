@@ -42,7 +42,8 @@ class HtmlParser(BaseParser):
         return page.select(tc).select(tb)
 
     def _extract_item(self, block):
-        pass
+        ti = self.templates.get('item', {})
+        return {k: block.select(t).text() for k, t in ti.items()}
 
     def parse(self):
         page = self._grab_page()

@@ -24,6 +24,11 @@ class KinozalSearch(BaseSourse):
         'container': '*//table[contains(@class, "t_peer")]',
         'block': 'tr[contains(@class, "bg")]',
         'check': '*/title[text()="Раздачи :: Кинозал.ТВ"]',
+        'item': {
+            'title': 'td[@class="nam"]',
+            'url': 'td[@class="nam"]/a/@href',
+            'size': 'td[@class="s"][2]'
+        }
     }
     _params = {'proxy': 'True'}
 
