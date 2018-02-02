@@ -1,31 +1,64 @@
 
-from sqlalchemy import Column, Integer, Numeric, ForeignKey, String
+from sqlalchemy import Column, Integer, Numeric, ForeignKey, String, DateTime, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
+import json
+
+import source
+import worker
 
 
 TableBase = declarative_base()
 
 
-class ParsedItem(TableBase):
+class Item(TableBase):
     __table__ = 'item'
 
     id = Column(Integer, primary_key=True)
-    _attributes = relationship('ItemAttribute', backref='item')
+    source_id = Column(Integer, ForeignKey('source.id'), nullable=False)
+    title = Column(String)
+    update_dt = Column(DateTime)
 
-    @property
-    def attributes(self):
-        return {a.name: a.value for a in self._attributes}
+    source = relationship('Source', backref='items')
 
 
-class ItemAttribute(TableBase):
-    __table__ = 'item_attr'
+class Feed(TableBase):
+    __table__ = 'feed'
 
     id = Column(Integer, primary_key=True)
-    item_id = Column(Integer, ForeignKey('item.id'), nullable=False)
-    name = Column(String, nullable=False)
-    value_num = Column(Numeric)
+    engine_id = Column(Integer, ForeignKey('engine.id'), nullable=False)
+    _params = Column(JSON)
+
+    engine = relationship('Engine')
 
     @property
-    def value(self):
-        return self.value_num
+    def params(self):
+        return json.load(self._params)
+
+
+class Engine(TableBase):
+    __table__ = 'engine'
+
+    id = Column(Integer, primary_key=True)
+    class_name = Column(String)
+
+
+class Task(TableBase):
+    __table__ = 'task'
+
+    id = Column(Integer, primary_key=True)
+    worker_id = Column(Integer, ForeignKey('worker.id'), nullable=False)
+    scheduled = Column(DateTime)
+    feed_id = Column(Integer, ForeignKey('feed.id'))
+
+    _feed = relationship('Feed')
+
+
+class Executor(TableBase):
+    __table__ = 'worker'
+
+    id = Column(Integer, primary_key=True)
+    class_name = Column(String)
+
+

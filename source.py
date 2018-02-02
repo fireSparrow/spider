@@ -2,7 +2,7 @@
 from parser import HtmlParser
 
 
-class BaseSourse:
+class BaseEngine:
 
     _parser = None
     _params = {'proxy': False}
@@ -16,7 +16,7 @@ class BaseSourse:
         return parser.parse()
 
 
-class KinozalSearch(BaseSourse):
+class KinozalSearch(BaseEngine):
 
     _parser = HtmlParser
     _base_url = 'http://kinozal.tv/browse.php?s='
