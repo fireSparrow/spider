@@ -2,6 +2,11 @@
 from parser import HtmlParser
 
 
+usefull = {
+    1: 'KinozalSearch'
+}
+
+
 class BaseEngine:
 
     _parser = None

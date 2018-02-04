@@ -1,5 +1,5 @@
 
-from archive import Task, Item
+from mapper import Task, Item
 
 
 class BaseWorker:
